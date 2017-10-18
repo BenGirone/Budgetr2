@@ -10,7 +10,9 @@ namespace Budgetr2
     {
         DateTime DateAdded { get; }
 
-        int PositionInParent { get; }
+        List<Expense> Expenses { set; get; }
+
+        int PositionInParent { get; set; }
 
         double Amount { set; get; }
 
@@ -18,7 +20,11 @@ namespace Budgetr2
 
         double Surplus { set; get; }
 
+        double TransferedSurplus { get; set; }
+
         void CalculateBudget();
+
+        void addExpense(Expense exp); 
 
         void TransferSurplus(ref IBudget b, double transferAmount);
     }

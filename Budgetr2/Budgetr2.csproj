@@ -65,7 +65,9 @@
     </Compile>
     <Compile Include="Budget.cs" />
     <Compile Include="BudgetController.cs" />
+    <Compile Include="BudgetFacade.cs" />
     <Compile Include="BudgetIterator.cs" />
+    <Compile Include="Expense.cs" />
     <Compile Include="IBudget.cs" />
     <Compile Include="ITraversableBudget.cs" />
     <Compile Include="MainWindow.xaml.cs">

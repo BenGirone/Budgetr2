@@ -15,6 +15,8 @@ namespace Budgetr2
         private string name;
         private double surplus;
         private List<IBudget> subBudgets;
+        private List<Expense> expenses;
+        private double transferedSurplus; 
 
         //the amount that can be spent on this budget on any day
         public double Amount { get => amount; set => amount = value; }
@@ -28,33 +30,45 @@ namespace Budgetr2
         //the name that will be visible to the user
         public string Name { get => name; set => name = value; }
 
-        public int PositionInParent => pos;
-
         public DateTime DateAdded => dateAdded;
 
-        public Budget(int p = 0)
+        int IBudget.PositionInParent { get => pos; set => pos = value; }
+
+        public List<Expense> Expenses { get => expenses; set => Expenses = value; }
+
+        public double TransferedSurplus { get => transferedSurplus; set => transferedSurplus = value; }
+
+        public Budget()
         {
-            pos = p;
             dateAdded = DateTime.Now;
         }
 
         //
         public void addSub(IBudget b)
         {
+            b.PositionInParent = subBudgets.Count;
             subBudgets.Add(b);
-            CalculateBudget();
         }
 
         //
         public void CalculateBudget()
         {
-            
+            surplus = ((DateTime.Now - dateAdded).TotalDays) * amount;
+            for (int i = 0; i < expenses.Count; i++)
+            {
+                surplus -= expenses[i].Amount;
+            }
         }
 
         //
         public void removeSub(int index)
         {
-            throw new NotImplementedException();
+            for (int i = (index + 1); i < subBudgets.Count; i++)
+            {
+                subBudgets[i].PositionInParent--;
+            }
+
+            subBudgets.RemoveAt(index);
         }
 
         //
@@ -63,15 +77,26 @@ namespace Budgetr2
             if (transferAmount <= surplus)
             {
                 surplus -= transferAmount;
+                transferedSurplus -= transferAmount;
 
                 b.Surplus += transferAmount;
+                b.TransferedSurplus += transferAmount;
             }
             else
             {
                 b.Surplus += surplus;
+                b.TransferedSurplus += surplus;
 
+                transferedSurplus -= surplus;
                 surplus = 0;
             }
+        }
+
+        //
+        public void addExpense(Expense exp)
+        {
+            expenses.Add(exp);
+            CalculateBudget();
         }
     }
 }
